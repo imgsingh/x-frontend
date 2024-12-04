@@ -1,0 +1,78 @@
+.home-wrapper{
+    background: #ffffff;
+    display: flex;
+    flex-direction: row;
+    .home-header{
+        margin: 10px 40px;
+        display: flex;
+        flex-direction: row;
+        
+        .logo-text{
+            font-size: 24px;
+            font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            font-weight: 500;
+            display: flex;
+            margin: auto 0;
+        }
+
+       
+        .header__logo{
+            background-image: url("../../assets/images/turing-x-white.png");
+            width: 70px;
+            height: 100px;
+            font-size: 100px;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            position: relative;
+            right: 10px;
+    
+        }
+    }
+    .home-navigation{
+       
+       
+        .MuiListItem-root {
+            font-size: 18px; /* Increase the font size of list items */
+        }
+          
+        .MuiListItemIcon-root {
+            font-size: 50px!important; /* Increase the size of the icons */
+            min-width: 50px!important;; /* Adjust to make sure the icons align well */
+            margin-left: 30px;
+        }
+          
+        .MuiListItemText-primary {
+            font-size: 18px; /* Set text size inside the list */
+        }
+        .post-button {
+            background-color: #1DA1F2; 
+            color: white;
+            border-radius: 20px; 
+            padding: 8px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: none; 
+            transition: background-color 0.3s ease; 
+            margin: 30px 40px;
+
+          }
+          
+          .post-button:hover {
+            background-color: #1A91DA; /* Slightly darker blue on hover */
+          }
+    }
+
+    .home-content{
+        display: flex;
+        flex-direction: column;
+        margin: 20px 40px 20px 200px;
+        .create-post-wrapper{
+            width: 600px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            padding-bottom: 20px;
+        }
+    }
+    
+}
