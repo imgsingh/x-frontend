@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Avatar, IconButton } from '@mui/material';
 import ThumbUp from '@mui/icons-material/ThumbUp';
@@ -14,7 +15,7 @@ const Post = ({ user, text, content, likes, retweets, replies, time }) => {
           <div className='post-content-primary-content'>
             <div className='post-content-primary-username'>
                 <span className="username">{user?.username}</span> 
-                <span className="handle">@{user?.handle}</span> • <span>{time}</span>
+                <span className="handle">@{user?.handle}</span> • <span className='post-time'>{time}</span>
                 
             </div>
             <div className="post-text">{text}</div>
@@ -26,15 +27,15 @@ const Post = ({ user, text, content, likes, retweets, replies, time }) => {
         <div className="engagement-icons">
           <IconButton className="icon">
             <ThumbUp />
-            <span>{likes}</span>
+            <span className='reaction-text'>{likes}</span>
           </IconButton>
           <IconButton className="icon">
             <Repeat />
-            <span>{retweets}</span>
+            <span className='reaction-text'>{retweets}</span>
           </IconButton>
           <IconButton className="icon">
             <ChatBubbleOutline />
-            <span>{replies}</span>
+            <span className='reaction-text'>{replies}</span>
           </IconButton>
         </div>
       </div>

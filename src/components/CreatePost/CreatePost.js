@@ -1,17 +1,16 @@
+
 import React, { useState } from 'react';
 import { TextField, Button } from '@mui/material';
 import './CreatePost.css'; 
+import { usePostContext } from '../PostContext';
 
-const CreatePost = ({ onPost, onCancel }) => {
-  const [postContent, setPostContent] = useState('');
+const CreatePost = ({ onPost, onCancel, content, onContentChange }) => {
+  const { postContent, updateContent } = usePostContext();
 
-  const handlePostChange = (event) => {
-    setPostContent(event.target.value);
-  };
 
   const handlePostSubmit = () => {
     onPost(postContent);
-    setPostContent(''); 
+    updateContent('')
   };
 
   return (
@@ -22,7 +21,7 @@ const CreatePost = ({ onPost, onCancel }) => {
         rows={4}
         fullWidth
         value={postContent}
-        onChange={handlePostChange}
+        onChange={(e) => updateContent(e.target.value)}
         placeholder="What's happening?"
         className="post-textfield"
       />

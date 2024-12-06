@@ -1,70 +1,70 @@
 .post-content-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .post-textfield {
-    font-size: 16px;
-    color: #333;
-  }
-  
-  .post-content-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-  
-  .cancel-button {
-    text-transform: none;
-    font-size: 14px;
-    color: #1DA1F2;
-    border: 1px solid #1DA1F2;
-    border-radius: 20px;
-    padding: 5px 15px;
-  }
-  
-  .cancel-button:hover {
-    background-color: #e6f7ff;
-  }
-  
-  .post-button {
-    background-color: #1DA1F2!important;
-    color: white!important;
-    border-radius: 20px!important;
-    padding: 5px 20px!important;
-    font-weight: bold!important;
-    min-width: 100px!important;;
-  }
-  
-  .post-button:hover {
-    background-color: #1A91DA;
-  }
-  
-  .post-button:disabled {
-    background-color: #cce7ff;
-    color: #999;
-  }
-  
-    /* Style for the PostContent component */
-    .post-content {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-      }
-      
-      /* Style for the TextField inside the modal */
-      .post-content .MuiTextField-root {
-        margin-bottom: 16px;
-        font-size: 16px; /* Adjust text size */
-      }
-      
-      /* Style for the buttons inside the modal */
-      .post-content .buttons {
-        display: flex;
-        justify-content: flex-end;
-      }
-      
-      .post-content .buttons .MuiButton-root {
-        margin-left: 8px;
-      }
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.post-textfield {
+  font-size: 16px;
+  color: #333;
+}
+
+.post-content-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.cancel-button {
+  text-transform: none;
+  font-size: 14px;
+  color: #1DA1F2;
+  border: 1px solid #1DA1F2;
+  border-radius: 20px;
+  padding: 5px 15px;
+}
+
+.cancel-button:hover {
+  background-color: #e6f7ff;
+}
+
+.post-button {
+  background-color: #1DA1F2!important;
+  color: white!important;
+  border-radius: 20px!important;
+  padding: 5px 20px!important;
+  font-weight: bold!important;
+  min-width: 100px!important;;
+}
+
+.post-button:hover {
+  background-color: #1A91DA;
+}
+
+.post-button:disabled {
+  background-color: #cce7ff;
+  color: #999;
+}
+
+  /* Style for the PostContent component */
+  .post-content {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    
+    /* Style for the TextField inside the modal */
+    .post-content .MuiTextField-root {
+      margin-bottom: 16px;
+      font-size: 16px; /* Adjust text size */
+    }
+    
+    /* Style for the buttons inside the modal */
+    .post-content .buttons {
+      display: flex;
+      justify-content: flex-end;
+    }
+    
+    .post-content .buttons .MuiButton-root {
+      margin-left: 8px;
+    }

@@ -1,9 +1,10 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import CreatePost from '../CreatePost/CreatePost';
 
 
-const PostModal = ({ open, handleClose, handlePost }) => {
+const PostModal = ({ open, handleClose, handlePost, content }) => {
 
     const onPostClick = (content) => {
         // Handle post submission logic here (e.g., send content to API)
@@ -25,7 +26,7 @@ const PostModal = ({ open, handleClose, handlePost }) => {
       }}>
         <DialogTitle>What's happening?</DialogTitle>
         <DialogContent>
-          <CreatePost onPost={onPostClick} onCancel={handleClose} />
+          <CreatePost onPost={onPostClick} onCancel={handleClose}/>
         </DialogContent>
       </Dialog>
     </div>

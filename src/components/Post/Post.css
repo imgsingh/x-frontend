@@ -1,86 +1,100 @@
 /* Container for each post */
 .post-container {
-    display: flex;
-    align-items: flex-start;
-    padding: 16px;
-    border-bottom: 1px solid #e6ecf0;
-    margin: 20px 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    max-width: 700px;
-  }
-  
-  /* Profile Picture */
-  .profile-picture {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    margin-right: 12px;
-  }
-  
-  /* Username and Handle */
-  .username {
-    font-weight: bold;
-    color: #1d9bf0;
-  }
-  
-  .handle {
-    color: #6e767d;
-  }
-  
-  /* Post Text */
-  .post-text {
-    font-size: 14px;
-    color: #000000;
-    margin-bottom: 8px;
-    display: flex;
-    margin-top: 3px;
-  }
-  
-  /* Media Section */
-  .post-media {
-    margin-top: 8px;
-    width: 100%;
-    max-height: 400px;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-  
-  /* Engagement Icons */
-  .engagement-icons {
-    display: flex;
-    align-items: center;
-    margin-top: 8px;
-  }
-  
-  .engagement-icons .icon {
-    margin-right: 16px;
-    cursor: pointer;
-    color: #6e767d;
-  }
-  
-  .engagement-icons .icon:hover {
-    color: #1d9bf0;
-  }
+  display: flex;
+  align-items: flex-start;
+  padding: 16px;
+  border-bottom: 1px solid #e6ecf0;
+  margin: 20px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 700px;
+}
 
-  .post-content{
-    display: flex;
-    flex-direction: column;
-  }
-  .post-content-primary{
-    display: flex;
-    flex-direction: row;
-    .post-content-primary-content{
-        display: flex;
-        flex-direction: column;
-    }
-    .post-content-primary-username{
-        display: flex;
-        flex-direction: row;
-    }
-    .post-conx{
+/* Profile Picture */
+.profile-picture {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin-right: 12px;
+}
+
+/* Username and Handle */
+.username {
+  font-weight: bold;
+  color: #1d9bf0;
+}
+
+.handle {
+  color: #6e767d;
+}
+
+/* Post Text */
+.post-text {
+  font-size: 14px;
+  color: #000000;
+  margin-bottom: 8px;
+  display: flex;
+  margin-top: 3px;
+}
+
+/* Media Section */
+.post-media {
+  margin-top: 8px;
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Engagement Icons */
+.engagement-icons {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.engagement-icons .icon {
+  margin-right: 16px;
+  cursor: pointer;
+  color: #6e767d;
+}
+
+.engagement-icons .icon:hover {
+  color: #1d9bf0;
+}
+
+.post-content{
+  display: flex;
+  flex-direction: column;
+}
+.post-content-primary{
+  display: flex;
+  flex-direction: row;
+  .post-content-primary-content{
       display: flex;
-      line-height: 1.3;
-    }
-    
+      flex-direction: column;
   }
+  .post-content-primary-username{
+      display: flex;
+      flex-direction: row;
+      .handle{
+        margin-right: 5px;
+      }
+      .post-time{
+        font-size: 12px;
+        display: flex;
+        margin: auto 0;
+        margin-left: 5px;
+      }
+  }
+ 
   
+}
+
+.post-conx{
+  display: flex;
+  line-height: 1.4!important;
+}
+.reaction-text{
+  font-size: 18px;
+  margin-left: 5px;
+}
