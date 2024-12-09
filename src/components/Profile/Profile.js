@@ -6,24 +6,35 @@ import CoverImage from '../../assets/images/cover-image.jpg';
 
 const Profile = () => {
     const [userPosts, setUserPosts] = useState([]);
+    const [userId, setUserId] = useState("1");
+    const [name, setName] = useState("John Doe");
+    const [email, setEmail] = useState("test@gmail.com");
+    const [bio, setBio] = useState("Bio");
 
     useEffect(() => {
+        if (localStorage.getItem("userId")) {
+
+        }
         // Example API call using bounding box coordinates
-        fetch("https://twitter-team-turning-testers-19648cf420b7.herokuapp.com/posts/users/1/allPosts", {
+        fetch("https://twitter-team-turning-testers-19648cf420b7.herokuapp.com/posts/users/" + userId + "/allPosts", {
             method: "GET",
             headers: { "Content-Type": "application/json" },
-            // body: JSON.stringify({
-            //     northEastLat: northEast.lat,
-            //     northEastLng: northEast.lng,
-            //     southWestLat: southWest.lat,
-            //     southWestLng: southWest.lng,
-            // }),
         })
             .then((response) => response.json())
             .then((data) => {
                 setUserPosts(data);
             })
             .catch((error) => console.error("Error calling API:", error));
+
+        if (localStorage.getItem("name")) {
+            setName(localStorage.getItem("name"));
+        }
+        if (localStorage.getItem("email")) {
+            setEmail(localStorage.getItem("email"));
+        }
+        if (localStorage.getItem("bio")) {
+            setBio(localStorage.getItem("bio"));
+        }
     }, []);
 
     return (
@@ -39,28 +50,14 @@ const Profile = () => {
 
             {/* Profile Section */}
             <div className="profile">
-                {/* <div className="profile-picture">
-                    <img
-                        src="https://via.placeholder.com/150"
-                        alt="Profile"
-                        className="profile-image"
-                    />
-                </div> */}
-
                 <div className="profile-details">
-                    <h1 className="name">John Doe</h1>
-                    <p className="handle">@johndoe</p>
+                    <h1 className="name">{name}</h1>
+                    <p className="handle">{email}</p>
                     <p className="bio">
-                        This is a bio section. Add a short description about the user here.
-                    </p>
-                    <p className="location">Location: San Francisco, CA</p>
-                    <p className="website">
-                        Website: <a href="https://johndoe.com">johndoe.com</a>
+                        {bio}
                     </p>
                 </div>
             </div>
-
-            {/* Followers and Following Section */}
             <div className="stats">
                 <div className="stat">
                     <span className="count">150</span>
