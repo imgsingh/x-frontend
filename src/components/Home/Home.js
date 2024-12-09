@@ -112,7 +112,7 @@ function Home() {
     const token = 'your-token-here'; // Replace with your actual token
 
     try {
-      const response = await fetch('http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/posts/users/1/allPosts', {
+      const response = await fetch('http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/posts/users//getAllPosts', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -195,7 +195,7 @@ function Home() {
                         <span className='logo-text'>Turing</span>
                         <div className="header__logo"></div>
                     </div>
-                    <List>
+                    <List className='navigation-list'>
                         {[
                         { text: 'Home', icon: <HomeIcon /> },
                         { text: 'Notifications', icon: <NotificationsIcon /> },
@@ -206,6 +206,8 @@ function Home() {
                             <ListItemText primary={item.text} />
                         </ListItem>
                         ))}
+                        <div className='notification-number'><span>1</span></div>
+
                     </List>
                     <Button
                         className="post-button"

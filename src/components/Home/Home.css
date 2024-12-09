@@ -31,7 +31,27 @@
         }
     }
     .home-navigation{
-       
+        .navigation-list{
+            position: relative;
+            .notification-number{
+                border-radius: 50%;
+                background-color: red;
+                color: white;
+                width: 18px;
+                height: 18px;
+                font-size: 12px;
+                display: flex;
+                justify-content: center;
+                position: absolute;
+                top:40%;
+                left: 17%;
+                span{
+                    display: flex;
+                    margin: auto;
+        
+                }
+        }
+       }
        
         .MuiListItem-root {
             font-size: 18px; /* Increase the font size of list items */
