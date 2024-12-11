@@ -22,24 +22,24 @@ function Login() {
     return emailPattern.test(email);
   }
 
-  // const handleLogin = (event) => {
-  //   event.preventDefault();
-  //   if (validateEmail(username) && password != '') {
-  //     fetch("http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/auth/login", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         "email": username,
-  //         "password": password,
-  //       })
-  //     })
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         const expirationDate = new Date();
-  //         expirationDate.setFullYear(expirationDate.getFullYear() + 20);
-  //         let cookiessss = getCookie("token")
-  //         if (cookiessss == null) {
-  //           document.cookie = `token=${data.token}; expires=${expirationDate.toUTCString()}; path=/`;
+  const handleLogin = (event) => {
+    event.preventDefault();
+    if (validateEmail(username) && password !== '') {
+      fetch("http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          "email": username,
+          "password": password,
+        })
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          const expirationDate = new Date();
+          expirationDate.setFullYear(expirationDate.getFullYear() + 20);
+          let cookiessss = getCookie("token")
+          if (cookiessss == null) {
+            document.cookie = `token=${data.token}; expires=${expirationDate.toUTCString()}; path=/`;
 
   //           localStorage.setItem("userDetails", JSON.stringify({
   //             userId: data.userId,

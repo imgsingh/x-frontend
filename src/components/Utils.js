@@ -5,5 +5,6 @@ export function getCookie(name) {
     return null;
 }
 
-
-
+export function getUserDetails(name) {
+    return JSON.parse(localStorage.getItem(name));
+}
