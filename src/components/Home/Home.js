@@ -50,7 +50,6 @@ function Home() {
     // Create WebSocket connection
     const socket = new SockJS(socketUrl);
     const stompClient = Stomp.over(socket);
-    debugger
 
     // Connect to WebSocket server
     stompClient.connect({}, (frame) => {
@@ -79,7 +78,7 @@ function Home() {
         });
       }
     };
-  }, [socketUrl]);
+  }, []);
 
   const handleClick = (component) => {
     if (component == null) {
@@ -237,7 +236,7 @@ function Home() {
 
   return (
     <div className='home-wrapper'>
-      <ToastContainer/>
+      <ToastContainer />
       <div className='home-navigation'>
         <Drawer
           className='drawer'

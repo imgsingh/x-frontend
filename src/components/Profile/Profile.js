@@ -7,7 +7,7 @@ import { getUserDetails } from '../Utils';
 
 const Profile = () => {
     const [userPosts, setUserPosts] = useState([]);
-    const [userId, setUserId] = useState("1");
+    const [userId, setUserId] = useState(1);
     const [name, setName] = useState("John Doe");
     const [email, setEmail] = useState("test@gmail.com");
     const [bio, setBio] = useState("Bio");
@@ -33,7 +33,7 @@ const Profile = () => {
         }
 
         // Example API call using bounding box coordinates
-        fetch("https://twitter-team-turning-testers-19648cf420b7.herokuapp.com/posts/users/" + userId + "/allPosts", {
+        fetch("https://twitter-team-turning-testers-19648cf420b7.herokuapp.com/posts/users/" + userDetails.userId + "/allPosts", {
             method: "GET",
             headers: { "Content-Type": "application/json" },
         })
