@@ -14,7 +14,7 @@ import { Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getCookie, getUserDetails } from '../Utils';
+import { getCookie, getUserDetails, enhancePosts } from '../Utils';
 
 
 
@@ -181,7 +181,7 @@ let userDetails = getUserDetails("userDetails");
       }
 
       const result = await response.json();
-      setPostData(result.map(item => item.posts).flat()); // Store the fetched posts in state
+      setDataForPosts(result)
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
@@ -196,6 +196,29 @@ let userDetails = getUserDetails("userDetails");
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+
+  const setDataForPosts = (result) => {
+    const updatedData = result.map(entry => {
+      const { name, email } = entry.user; // Extract user's name and email
+    
+      // Attach name and email to each post
+      const updatedPosts = entry.posts.map(post => ({
+        ...post,
+        username: name,
+        email,
+        handle: email.split("@gmail.com")[0],
+        profilePicture: 'https://example.com/profile2.jpg',
+
+      }));
+    
+      return {
+        ...entry,
+        posts: enhancePosts(updatedPosts),
+      };
+  
+    });
+    setPostData(updatedData.map(j => j.posts).flat()); // Store the fetched posts in state
+  }
 
 
   const submitPostContent = async () => {
@@ -286,12 +309,13 @@ let userDetails = getUserDetails("userDetails");
               {postData.map((post) => (
                 <Post
                   key={post.id}
-                  user={user}
+                  user={post}
                   content={post.content}
                   likes={post.likes}
                   retweets={post.retweets}
                   replies={post.replies}
                   time={post.createdAt}
+                  bio={post.bio}
                 />
               ))}
             </div>

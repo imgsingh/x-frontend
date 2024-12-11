@@ -78,12 +78,16 @@
       flex-direction: row;
       .handle{
         margin-right: 5px;
+        font-size: 15px;
+        display: flex;
+        margin: auto 5px auto 3px;
       }
       .post-time{
         font-size: 12px;
         display: flex;
         margin: auto 0;
         margin-left: 5px;
+        color: #1A1D1F;
       }
   }
  
@@ -93,6 +97,7 @@
 .post-conx{
   display: flex;
   line-height: 1.4!important;
+  margin: 20px 0;
 }
 .reaction-text{
   font-size: 18px;

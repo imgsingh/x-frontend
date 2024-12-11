@@ -8,7 +8,7 @@ import './Post.css';
 import moment from 'moment';
 
 
-const Post = ({ user, text, content, likes, retweets, replies, time }) => {
+const Post = ({ user, text, content, likes, retweets, replies, time, bio }) => {
   debugger
   function getRelativeTime(time) {
     if (!time) {
@@ -28,7 +28,7 @@ const Post = ({ user, text, content, likes, retweets, replies, time }) => {
                 <span className="handle">@{user?.handle}</span> • <span className='post-time'>{getRelativeTime(time)}</span>
                 
             </div>
-            <div className="post-text">{user.text}</div>
+            <div className="post-text">{bio}</div>
           </div>
            
         </div>

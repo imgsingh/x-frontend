@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import './Profile.css';
 import Post from '../Post/Post';
 import CoverImage from '../../assets/images/cover-image.jpg';
-import { getUserDetails } from '../Utils';
+import { getUserDetails, enhancePosts } from '../Utils';
 
 const Profile = () => {
     const [userPosts, setUserPosts] = useState([]);
@@ -39,10 +39,11 @@ const Profile = () => {
         })
             .then((response) => response.json())
             .then((data) => {
-                setUserPosts(data);
+                setUserPosts(enhancePosts(data));
             })
             .catch((error) => console.error("Error calling API:", error));
     }, []);
+
 
     return (
         <div className="profile-container">
@@ -80,7 +81,12 @@ const Profile = () => {
             <div className="tweets">
                 <h2>Recent Tweets</h2>
                 {userPosts.map((post) => (
-                    <Post key={post.id} user={user} text={post.content} time={post.createdAt}/>
+                    <Post key={post.id} user={user} bio={post.bio} 
+                          content={post.content} time={post.createdAt}
+                          likes={post.likes}
+                          retweets={post.retweets}
+                          replies={post.replies}
+                          />
                 ))}
             </div>
         </div>
