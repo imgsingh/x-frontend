@@ -1,7 +1,7 @@
 
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import './Home.css'
-import { Button, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Alert, Button, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -10,104 +10,129 @@ import CreatePost from '../CreatePost/CreatePost';
 import Post from '../Post/Post'
 import Profile from '../Profile/Profile';
 import { usePostContext } from '../PostContext';
+import { Stomp } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
 function Home() {
-    const [openModal, setOpenModal] = useState(false);
-    const { postContent } = usePostContext(); // Access shared state from context
-    const [postData, setPostData] = useState([]);
-    const [selectedComponent, setSelectedComponent] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
+  const { postContent } = usePostContext(); // Access shared state from context
+  const [postData, setPostData] = useState([]);
+  const [selectedComponent, setSelectedComponent] = useState(null);
+  const [notifications, setNotifications] = useState([]);
 
+  const socketUrl = "https://twitter-team-turning-testers-19648cf420b7.herokuapp.com/ws";
+  useEffect(() => {
+    const socket = new SockJS(socketUrl);
+    const stompClient = Stomp.over(socket);
 
-    const handleClick = (component) => {
-        if (component == null) {
-            setSelectedComponent(null);
-        } else {
-            setSelectedComponent(component);
-        }
+    stompClient.connect({}, () => {
+      console.log("Connected to WebSocket");
+
+      // Subscribe to the user's private notification queue
+      stompClient.subscribe("/user/queue/notifications", (message) => {
+        toast.info("This is an info message! {here we have to add message.body}");
+        setNotifications((prev) => [...prev, message.body]);
+      });
+    });
+
+    return () => {
+      stompClient.disconnect();
     };
+  }, []);
+
+
+  const handleClick = (component) => {
+    if (component == null) {
+      setSelectedComponent(null);
+    } else {
+      setSelectedComponent(component);
+    }
+  };
 
 
 
-    // const postData = [
-    //     {
-    //       id: 1,
-    //       user: {
-    //         profilePicture: 'https://example.com/profile1.jpg',
-    //         username: 'John Doe',
-    //         handle: 'johndoe',
-    //       },
-    //       text: 'This is a sample tweet! #react #materialui',
-    //       content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',  
-    //       likes: 10,
-    //       retweets: 3,
-    //       replies: 10,
-    //       time: '2m ago',
-    //     },
-    //     {
-    //       id: 2,
-    //       user: {
-    //         profilePicture: 'https://example.com/profile2.jpg',
-    //         username: 'Jane Smith',
-    //         handle: 'janesmith',
-    //       },
-    //       text: 'Learning React and Material UI is fun! 😄 #learning #react',
-    //       content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',  
-    //       likes: 200,
-    //       retweets: 50,
-    //       replies: 20,
-    //       time: '15m ago',
-    //     },
-    //     {
-    //         id: 3,
-    //         user: {
-    //           profilePicture: 'https://example.com/profile2.jpg',
-    //           username: 'Jane Smith',
-    //           handle: 'janesmith',
-    //         },
-    //         text: 'Learning React and Material UI is fun! 😄 #learning #react',
-    //         content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',  
-    //         likes: 200,
-    //         retweets: 50,
-    //         replies: 20,
-    //         time: '15m ago',
-    //       },
-    //       {
-    //         id: 5,
-    //         user: {
-    //           profilePicture: 'https://example.com/profile2.jpg',
-    //           username: 'Jane Smith',
-    //           handle: 'janesmith',
-    //         },
-    //         text: 'Learning React and Material UI is fun! 😄 #learning #react',
-    //         content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',  
-    //         likes: 200,
-    //         retweets: 50,
-    //         replies: 20,
-    //         time: '15m ago',
-    //       },
-    //       {
-    //         id: 5,
-    //         user: {
-    //           profilePicture: 'https://example.com/profile2.jpg',
-    //           username: 'Jane Smith',
-    //           handle: 'janesmith',
-    //         },
-    //         text: 'Learning React and Material UI is fun! 😄 #learning #react',
-    //         content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',  
-    //         likes: 200,
-    //         retweets: 50,
-    //         replies: 20,
-    //         time: '15m ago',
-    //       },
-    // ];
+  // const postData = [
+  //     {
+  //       id: 1,
+  //       user: {
+  //         profilePicture: 'https://example.com/profile1.jpg',
+  //         username: 'John Doe',
+  //         handle: 'johndoe',
+  //       },
+  //       text: 'This is a sample tweet! #react #materialui',
+  //       content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',  
+  //       likes: 10,
+  //       retweets: 3,
+  //       replies: 10,
+  //       time: '2m ago',
+  //     },
+  //     {
+  //       id: 2,
+  //       user: {
+  //         profilePicture: 'https://example.com/profile2.jpg',
+  //         username: 'Jane Smith',
+  //         handle: 'janesmith',
+  //       },
+  //       text: 'Learning React and Material UI is fun! 😄 #learning #react',
+  //       content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',  
+  //       likes: 200,
+  //       retweets: 50,
+  //       replies: 20,
+  //       time: '15m ago',
+  //     },
+  //     {
+  //         id: 3,
+  //         user: {
+  //           profilePicture: 'https://example.com/profile2.jpg',
+  //           username: 'Jane Smith',
+  //           handle: 'janesmith',
+  //         },
+  //         text: 'Learning React and Material UI is fun! 😄 #learning #react',
+  //         content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',  
+  //         likes: 200,
+  //         retweets: 50,
+  //         replies: 20,
+  //         time: '15m ago',
+  //       },
+  //       {
+  //         id: 5,
+  //         user: {
+  //           profilePicture: 'https://example.com/profile2.jpg',
+  //           username: 'Jane Smith',
+  //           handle: 'janesmith',
+  //         },
+  //         text: 'Learning React and Material UI is fun! 😄 #learning #react',
+  //         content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',  
+  //         likes: 200,
+  //         retweets: 50,
+  //         replies: 20,
+  //         time: '15m ago',
+  //       },
+  //       {
+  //         id: 5,
+  //         user: {
+  //           profilePicture: 'https://example.com/profile2.jpg',
+  //           username: 'Jane Smith',
+  //           handle: 'janesmith',
+  //         },
+  //         text: 'Learning React and Material UI is fun! 😄 #learning #react',
+  //         content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',  
+  //         likes: 200,
+  //         retweets: 50,
+  //         replies: 20,
+  //         time: '15m ago',
+  //       },
+  // ];
 
-    useEffect(() => {
-      getAllPosts(); // Fetch posts when component mounts
-    }, []);
+  useEffect(() => {
+    getAllPosts(); // Fetch posts when component mounts
+  }, []);
 
-     // Function to fetch all posts
+  // Function to fetch all posts
   const getAllPosts = async () => {
     const token = 'your-token-here'; // Replace with your actual token
 
@@ -130,124 +155,122 @@ function Home() {
     }
   };
 
-    // Open the modal when the "Post" button is clicked
-    const handleOpenModal = () => {
-        setOpenModal(true);
-    };
+  // Open the modal when the "Post" button is clicked
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
 
-    // Close the modal
-    const handleCloseModal = () => {
-        setOpenModal(false);
-    };
+  // Close the modal
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
 
 
-    const submitPostContent = async () => {
-        const token = 'your-token-here'; // Replace with your actual token
-        
-        try {
-          const response = await fetch('http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/posts', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`, // Adding the token to the Authorization header
+  const submitPostContent = async () => {
+    const token = 'your-token-here'; // Replace with your actual token
+
+    try {
+      const response = await fetch('http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Adding the token to the Authorization header
+        },
+        body: JSON.stringify({
+          userId: '1',
+          content: postContent
+        }), // Sending the post data as JSON
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      console.log('Post successful:', result);
+      getAllPosts(); // Refetch posts after successful post
+
+    } catch (error) {
+      console.error('Error posting content:', error);
+    }
+  };
+
+  return (
+    <div className='home-wrapper'>
+      <div className='home-navigation'>
+        <Drawer
+          className='drawer'
+          variant="permanent"
+          anchor="left"
+          sx={{
+            width: 240,
+            fontSize: 25,
+            flexShrink: 0,
+            '& .MuiDrawer-paper': {
+              width: 350,
+              boxSizing: 'border-box',
+              backgroundColor: '#ffffff',
+              border: 'none',
+              boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
             },
-            body: JSON.stringify({
-                userId: '1',
-                content: postContent
-            }), // Sending the post data as JSON
-          });
-      
-          if (!response.ok) {
-            throw new Error(`Error: ${response.status} ${response.statusText}`);
-          }
-      
-          const result = await response.json();
-          console.log('Post successful:', result);
-          getAllPosts(); // Refetch posts after successful post
+          }}>
+          <div className='home-header'>
+            <span className='logo-text'>Turing</span>
+            <div className="header__logo"></div>
+          </div>
+          <List className='navigation-list'>
+            {[
+              { text: 'Home', icon: <HomeIcon /> },
+              { text: 'Notifications', icon: <NotificationsIcon /> },
+              { text: 'Profile', icon: <AccountCircleIcon />, component: <Profile /> },
+            ].map((item, index) => (
+              <ListItem button key={index} onClick={() => handleClick(item.component)}>
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItem>
+            ))}
+            <div className='notification-number'><span>{notifications.length}</span></div>
 
-        } catch (error) {
-          console.error('Error posting content:', error);
-        }
-      };
-      
-      
+          </List>
+          <Button
+            className="post-button"
+            variant="contained"
+            color="primary"
+            onClick={handleOpenModal}
+          >Post
+          </Button>
 
-    return(
-        <div className='home-wrapper'>    
-            <div className='home-navigation'>
-                <Drawer
-                    className='drawer'
-                    variant="permanent"
-                    anchor="left"
-                    sx={{
-                        width: 240,
-                        fontSize: 25,
-                        flexShrink: 0,
-                        '& .MuiDrawer-paper': {
-                        width: 350,
-                        boxSizing: 'border-box',
-                        backgroundColor: '#ffffff',
-                        border: 'none',
-                        boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
-                        },
-                    }}>
-                     <div className='home-header'>
-                        <span className='logo-text'>Turing</span>
-                        <div className="header__logo"></div>
-                    </div>
-                    <List className='navigation-list'>
-                        {[
-                        { text: 'Home', icon: <HomeIcon /> },
-                        { text: 'Notifications', icon: <NotificationsIcon /> },
-                        { text: 'Profile', icon: <AccountCircleIcon />, component: <Profile /> },
-                        ].map((item, index) => (
-                        <ListItem button key={index} onClick={() => handleClick(item.component)}>
-                            <ListItemIcon>{item.icon}</ListItemIcon>
-                            <ListItemText primary={item.text} />
-                        </ListItem>
-                        ))}
-                        <div className='notification-number'><span>1</span></div>
-
-                    </List>
-                    <Button
-                        className="post-button"
-                        variant="contained"
-                        color="primary"
-                        onClick={handleOpenModal}
-                        >Post
-                    </Button>
-
-                </Drawer>
+        </Drawer>
+      </div>
+      {selectedComponent == null
+        && <>
+          <div className='home-content'>
+            <div className='create-post-wrapper'>
+              <CreatePost onPost={submitPostContent} />
             </div>
-            {selectedComponent == null
-                && <>
-                <div className='home-content'>
-                    <div className='create-post-wrapper'>
-                        <CreatePost onPost={submitPostContent} />
-                    </div>
-                    <div className='post-list-wrapper'>
-                    {postData.map((post) => (
-                        <Post
-                            key={post.id}
-                            user={post.user}
-                            text={post.text}
-                            content={post.content}
-                            likes={post.likes}
-                            retweets={post.retweets}
-                            replies={post.replies}
-                            time={post.time}
-                        />
-                    ))}
-                    </div>
-                </div>
-                <PostModal open={openModal} handleClose={handleCloseModal} 
-                        handlePost={submitPostContent} />
-            </>}
-            <div style={{ paddingLeft: '200px' }}>
-                {selectedComponent}
+            <div className='post-list-wrapper'>
+              {postData.map((post) => (
+                <Post
+                  key={post.id}
+                  user={post.user}
+                  text={post.text}
+                  content={post.content}
+                  likes={post.likes}
+                  retweets={post.retweets}
+                  replies={post.replies}
+                  time={post.time}
+                />
+              ))}
             </div>
-        </div>
-    )
+          </div>
+          <PostModal open={openModal} handleClose={handleCloseModal}
+            handlePost={submitPostContent} />
+        </>}
+      <div style={{ paddingLeft: '200px' }}>
+        {selectedComponent}
+      </div>
+    </div>
+  )
 
 }
 export default Home
