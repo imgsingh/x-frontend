@@ -14,6 +14,7 @@ import { Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getCookie } from '../Utils';
 
 
 
@@ -134,10 +135,11 @@ function Home() {
 
   // Function to fetch all posts
   const getAllPosts = async () => {
-    const token = 'your-token-here'; // Replace with your actual token
+    const token = getCookie('token'); // Replace with your actual token
+    debugger
 
     try {
-      const response = await fetch('http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/posts/users//getAllPosts', {
+      const response = await fetch('http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/connection/getAllPosts', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -197,6 +199,7 @@ function Home() {
 
   return (
     <div className='home-wrapper'>
+      <ToastContainer/>
       <div className='home-navigation'>
         <Drawer
           className='drawer'
