@@ -14,7 +14,7 @@ import { Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getCookie } from '../Utils';
+import { getCookie, getUserDetails } from '../Utils';
 
 
 
@@ -24,33 +24,20 @@ function Home() {
   const [postData, setPostData] = useState([]);
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [notifications, setNotifications] = useState([]);
+  const [user, setUser] = useState({
+    profilePicture: 'https://example.com/profile2.jpg',
+    username: 'Jane Smith',
+    handle: 'janesmith',
+})
+let userDetails = getUserDetails("userDetails");
+
 
   const socketUrl = "https://twitter-team-turning-testers-19648cf420b7.herokuapp.com/ws";
-
-  // useEffect(() => {
-  //   const socket = new SockJS(socketUrl);
-  //   const stompClient = Stomp.over(socket);
-
-  //   stompClient.connect({}, () => {
-  //     console.log("Connected to WebSocket");
-
-  //     // Subscribe to the user's private notification queue
-  //     stompClient.subscribe("/user/queue/notifications", (message) => {
-  //       toast.info("This is an info message! {here we have to add message.body}");
-  //       setNotifications((prev) => [...prev, message.body]);
-  //     });
-  //   });
-
-  //   return () => {
-  //     stompClient.disconnect();
-  //   };
-  // }, []);
 
   useEffect(() => {
     // Create WebSocket connection
     const socket = new SockJS(socketUrl);
     const stompClient = Stomp.over(socket);
-    debugger
 
     // Connect to WebSocket server
     stompClient.connect({}, (frame) => {
@@ -165,6 +152,14 @@ function Home() {
   // ];
 
   useEffect(() => {
+    if (userDetails) {
+      setUser({
+          profilePicture: 'https://example.com/profile2.jpg',
+          username: userDetails.name,
+          handle: userDetails.email.split("@gmail.com")[0],
+          text: "Learning React and Material UI is fun! 😄 #learning #react"
+      })
+  }
     getAllPosts(); // Fetch posts when component mounts
   }, []);
 
@@ -206,8 +201,6 @@ function Home() {
   const submitPostContent = async () => {
     const token = getCookie('token'); // Fetch token from cookies
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-
-
 
     try {
       const response = await fetch('http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/posts', {
@@ -293,13 +286,12 @@ function Home() {
               {postData.map((post) => (
                 <Post
                   key={post.id}
-                  user={post.user}
-                  text={post.text}
+                  user={user}
                   content={post.content}
                   likes={post.likes}
                   retweets={post.retweets}
                   replies={post.replies}
-                  time={post.time}
+                  time={post.createdAt}
                 />
               ))}
             </div>

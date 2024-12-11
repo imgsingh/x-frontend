@@ -80,7 +80,7 @@ const Profile = () => {
             <div className="tweets">
                 <h2>Recent Tweets</h2>
                 {userPosts.map((post) => (
-                    <Post key={post.id} user={user} text={post.content} />
+                    <Post key={post.id} user={user} text={post.content} time={post.createdAt}/>
                 ))}
             </div>
         </div>
