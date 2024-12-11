@@ -26,25 +26,60 @@ function Home() {
   const [notifications, setNotifications] = useState([]);
 
   const socketUrl = "https://twitter-team-turning-testers-19648cf420b7.herokuapp.com/ws";
+
+  // useEffect(() => {
+  //   const socket = new SockJS(socketUrl);
+  //   const stompClient = Stomp.over(socket);
+
+  //   stompClient.connect({}, () => {
+  //     console.log("Connected to WebSocket");
+
+  //     // Subscribe to the user's private notification queue
+  //     stompClient.subscribe("/user/queue/notifications", (message) => {
+  //       toast.info("This is an info message! {here we have to add message.body}");
+  //       setNotifications((prev) => [...prev, message.body]);
+  //     });
+  //   });
+
+  //   return () => {
+  //     stompClient.disconnect();
+  //   };
+  // }, []);
+
   useEffect(() => {
+    // Create WebSocket connection
     const socket = new SockJS(socketUrl);
     const stompClient = Stomp.over(socket);
+    debugger
 
-    stompClient.connect({}, () => {
-      console.log("Connected to WebSocket");
+    // Connect to WebSocket server
+    stompClient.connect({}, (frame) => {
+      console.log("Connected to WebSocket", frame);
 
-      // Subscribe to the user's private notification queue
+      // Subscribe to notifications queue
       stompClient.subscribe("/user/queue/notifications", (message) => {
-        toast.info("This is an info message! {here we have to add message.body}");
-        setNotifications((prev) => [...prev, message.body]);
+        // Assuming message.body is a JSON string, parse it if necessary
+        const parsedMessage = JSON.parse(message.body);
+
+        // Display toast notification
+        toast.info(`New Notification: ${parsedMessage.content || "No content"}`, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+
+        // Update notifications state
+        setNotifications((prev) => [...prev, parsedMessage]);
       });
     });
 
+    // Cleanup function to disconnect WebSocket when the component unmounts
     return () => {
-      stompClient.disconnect();
+      if (stompClient) {
+        stompClient.disconnect(() => {
+          console.log("Disconnected from WebSocket");
+        });
+      }
     };
-  }, []);
-
+  }, [socketUrl]);
 
   const handleClick = (component) => {
     if (component == null) {
@@ -136,7 +171,7 @@ function Home() {
   // Function to fetch all posts
   const getAllPosts = async () => {
     const token = getCookie('token'); // Replace with your actual token
-    debugger
+
 
     try {
       const response = await fetch('http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/connection/getAllPosts', {
@@ -151,7 +186,7 @@ function Home() {
       }
 
       const result = await response.json();
-      setPostData(result); // Store the fetched posts in state
+      setPostData(result.map(item => item.posts).flat()); // Store the fetched posts in state
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
@@ -169,7 +204,10 @@ function Home() {
 
 
   const submitPostContent = async () => {
-    const token = 'your-token-here'; // Replace with your actual token
+    const token = getCookie('token'); // Fetch token from cookies
+    const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+
+
 
     try {
       const response = await fetch('http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/posts', {
@@ -179,7 +217,7 @@ function Home() {
           Authorization: `Bearer ${token}`, // Adding the token to the Authorization header
         },
         body: JSON.stringify({
-          userId: '1',
+          userId: userDetails?.userId,
           content: postContent
         }), // Sending the post data as JSON
       });

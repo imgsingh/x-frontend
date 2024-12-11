@@ -13,7 +13,7 @@ function Login() {
     const token = getCookie('token');
 
     if (token) {
-      navigate('/');
+      navigate('/home');
     }
   }, [navigate]);
 
@@ -22,39 +22,86 @@ function Login() {
     return emailPattern.test(email);
   }
 
-  const handleLogin = (event) => {
-    event.preventDefault();
-    if (validateEmail(username) && password != '') {
-      fetch("http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          "email": username,
-          "password": password,
-        })
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          const expirationDate = new Date();
-          expirationDate.setFullYear(expirationDate.getFullYear() + 20);
-          let cookiessss = getCookie("token")
-          if (cookiessss == null) {
-            document.cookie = `token=${data.token}; expires=${expirationDate.toUTCString()}; path=/`;
+  // const handleLogin = (event) => {
+  //   event.preventDefault();
+  //   if (validateEmail(username) && password != '') {
+  //     fetch("http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/auth/login", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         "email": username,
+  //         "password": password,
+  //       })
+  //     })
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         const expirationDate = new Date();
+  //         expirationDate.setFullYear(expirationDate.getFullYear() + 20);
+  //         let cookiessss = getCookie("token")
+  //         if (cookiessss == null) {
+  //           document.cookie = `token=${data.token}; expires=${expirationDate.toUTCString()}; path=/`;
 
-            localStorage.setItem("userDetails", JSON.stringify({
-              userId: data.userId,
-              name: data.name,
-              email: data.email,
-              profileBio: data.profileBio
-            }));
-          }
-          navigate('/')
-        })
-        .catch((error) => console.error("Error calling API:", error));
+  //           localStorage.setItem("userDetails", JSON.stringify({
+  //             userId: data.userId,
+  //             name: data.name,
+  //             email: data.email,
+  //             profileBio: data.profileBio
+  //           }));
+  //         }
+  //         navigate('/home')
+  //       })
+  //       .catch((error) => console.error("Error calling API:", error));
+  //   } else {
+  //     alert("Invalid Credentials")
+  //   }
+  // };
+
+ 
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    if (validateEmail(username) && password !== '') {
+      try {
+        const response = await fetch("http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            "email": username,
+            "password": password,
+          })
+        });
+  
+        const data = await response.json();
+  
+        const expirationDate = new Date();
+        expirationDate.setFullYear(expirationDate.getFullYear() + 20);
+  
+        // Set token in cookies
+        document.cookie = `token=${data.token}; expires=${expirationDate.toUTCString()}; path=/`;
+  
+        // Optionally save user details in localStorage
+        localStorage.setItem("userDetails", JSON.stringify({
+          userId: data.userId,
+          name: data.name,
+          email: data.email,
+          profileBio: data.profileBio
+        }));
+  
+        // Reload the page to ensure the cookie is available for useEffect to check
+        window.location.reload();  // This forces a reload so the useEffect hook can detect the token
+  
+      } catch (error) {
+        console.error("Error calling API:", error);
+      }
     } else {
-      alert("Invalid Credentials")
+      alert("Invalid Credentials");
     }
   };
+  
+  
+  
+  
+
+
 
   const goToSignUp = () => {
     navigate('/signup');
