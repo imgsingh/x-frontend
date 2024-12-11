@@ -4,3 +4,7 @@ export function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(';').shift();
     return null;
 }
+
+export function getUserDetails(name) {
+    return JSON.parse(localStorage.getItem(name));
+}

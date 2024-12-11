@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import './Profile.css';
 import Post from '../Post/Post';
 import CoverImage from '../../assets/images/cover-image.jpg';
+import { getUserDetails } from '../Utils';
 
 const Profile = () => {
     const [userPosts, setUserPosts] = useState([]);
@@ -10,11 +11,27 @@ const Profile = () => {
     const [name, setName] = useState("John Doe");
     const [email, setEmail] = useState("test@gmail.com");
     const [bio, setBio] = useState("Bio");
+    const [user, setUser] = useState({
+        profilePicture: 'https://example.com/profile2.jpg',
+        username: 'Jane Smith',
+        handle: 'janesmith',
+    })
+    let userDetails = getUserDetails("userDetails");
 
     useEffect(() => {
-        if (localStorage.getItem("userId")) {
+        if (userDetails) {
+            setUserId(userDetails.userId);
+            setName(userDetails.name);
+            setEmail(userDetails.email);
+            setBio(userDetails.profileBio);
 
+            setUser({
+                profilePicture: 'https://example.com/profile2.jpg',
+                username: userDetails.name,
+                handle: userDetails.email.split("@gmail.com")[0],
+            })
         }
+
         // Example API call using bounding box coordinates
         fetch("https://twitter-team-turning-testers-19648cf420b7.herokuapp.com/posts/users/" + userId + "/allPosts", {
             method: "GET",
@@ -25,16 +42,6 @@ const Profile = () => {
                 setUserPosts(data);
             })
             .catch((error) => console.error("Error calling API:", error));
-
-        if (localStorage.getItem("name")) {
-            setName(localStorage.getItem("name"));
-        }
-        if (localStorage.getItem("email")) {
-            setEmail(localStorage.getItem("email"));
-        }
-        if (localStorage.getItem("bio")) {
-            setBio(localStorage.getItem("bio"));
-        }
     }, []);
 
     return (
@@ -73,7 +80,7 @@ const Profile = () => {
             <div className="tweets">
                 <h2>Recent Tweets</h2>
                 {userPosts.map((post) => (
-                    <Post key={post.id} user={post.userId} text={post.content} />
+                    <Post key={post.id} user={user} text={post.content} />
                 ))}
             </div>
         </div>

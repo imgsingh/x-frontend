@@ -24,7 +24,7 @@ function Login() {
 
   const handleLogin = (event) => {
     event.preventDefault();
-    if (validateEmail(username) && password != '') {
+    if (validateEmail(username) && password !== '') {
       fetch("http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
