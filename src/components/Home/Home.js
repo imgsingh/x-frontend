@@ -66,7 +66,7 @@ let userDetails = getUserDetails("userDetails");
         });
       }
     };
-  }, [socketUrl]);
+  }, []);
 
   const handleClick = (component) => {
     if (component == null) {
@@ -230,7 +230,7 @@ let userDetails = getUserDetails("userDetails");
 
   return (
     <div className='home-wrapper'>
-      <ToastContainer/>
+      <ToastContainer />
       <div className='home-navigation'>
         <Drawer
           className='drawer'
