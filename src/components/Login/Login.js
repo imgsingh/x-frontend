@@ -1,27 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TextField, Button, Box, Container, Paper, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../components/Login/logo.png'; // Adjust path
+import { getCookie } from '../Utils';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const token = getCookie('token');
+
+    if (token) {
+      navigate('/');
+    }
+  }, [navigate]);
+
   function validateEmail(email) {
-    // Regular expression to validate the email format
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailPattern.test(email);
   }
 
-  const handleLogin = () => {
-    // const storedCredentials = JSON.parse(localStorage.getItem('credentials')) || {};
-    // if (storedCredentials.username === username && storedCredentials.password === password) {
-    //   alert('Login successful!');
-    // } else {
-    //   alert('Invalid username or password!');
-    // }
-
+  const handleLogin = (event) => {
+    event.preventDefault();
     if (validateEmail(username) && password != '') {
       fetch("http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/auth/login", {
         method: "POST",
@@ -35,16 +37,18 @@ function Login() {
         .then((data) => {
           const expirationDate = new Date();
           expirationDate.setFullYear(expirationDate.getFullYear() + 20);
+          let cookiessss = getCookie("token")
+          if (cookiessss == null) {
+            document.cookie = `token=${data.token}; expires=${expirationDate.toUTCString()}; path=/`;
 
-          document.cookie = `token=${data.token}; expires=${expirationDate.toUTCString()}; path=/`;
-
-          localStorage.setItem("userDetails", JSON.stringify({
-            userId: data.userId,
-            name: data.name,
-            email: data.email,
-            profileBio: data.profileBio
-          }));
-          navigate('/');
+            localStorage.setItem("userDetails", JSON.stringify({
+              userId: data.userId,
+              name: data.name,
+              email: data.email,
+              profileBio: data.profileBio
+            }));
+          }
+          navigate('/')
         })
         .catch((error) => console.error("Error calling API:", error));
     } else {
