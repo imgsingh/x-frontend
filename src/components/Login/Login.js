@@ -44,6 +44,7 @@ function Login() {
             email: data.email,
             profileBio: data.profileBio
           }));
+          navigate('/');
         })
         .catch((error) => console.error("Error calling API:", error));
     } else {

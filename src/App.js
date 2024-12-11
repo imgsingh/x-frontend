@@ -3,21 +3,19 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Home from './components/Home/Home';
 import Login from '../src/components/Login/Login';
 import SignUp from '../src/components/Login/signup';  // Note: Correct case for `signup`
+import { getCookie } from './components/Utils';
 
 function App() {
+  const token = getCookie('token');
+
   return (
     <Router>
       <div className="App">
         <Routes>
-          {/* Redirect root route to "/login" */}
-          <Route path="/" element={<Navigate to="/login" />} />
-
-          {/* Define routes for Login, SignUp, and Home */}
+          <Route path="/" element={token ? <Home /> : <Navigate to="/login" />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/home" element={<Home />} />
-
-          {/* Fallback for undefined routes */}
           <Route
             path="*"
             element={
