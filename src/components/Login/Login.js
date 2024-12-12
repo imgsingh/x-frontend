@@ -22,7 +22,7 @@ function Login() {
     return emailPattern.test(email);
   }
 
- 
+
   const handleLogin = async (event) => {
     event.preventDefault();
     if (validateEmail(username) && password !== '') {
@@ -35,26 +35,28 @@ function Login() {
             "password": password,
           })
         });
-  
+
         const data = await response.json();
-  
+
         const expirationDate = new Date();
         expirationDate.setFullYear(expirationDate.getFullYear() + 20);
-  
+
         // Set token in cookies
         document.cookie = `token=${data.token}; expires=${expirationDate.toUTCString()}; path=/`;
-  
+
         // Optionally save user details in localStorage
         localStorage.setItem("userDetails", JSON.stringify({
           userId: data.userId,
           name: data.name,
           email: data.email,
-          profileBio: data.profileBio
+          profileBio: data.profileBio,
+          followersCount: data.followersCount,
+          followingCount: data.followingCount
         }));
-  
+
         // Reload the page to ensure the cookie is available for useEffect to check
         window.location.reload();  // This forces a reload so the useEffect hook can detect the token
-  
+
       } catch (error) {
         console.error("Error calling API:", error);
       }
@@ -62,10 +64,10 @@ function Login() {
       alert("Invalid Credentials");
     }
   };
-  
-  
-  
-  
+
+
+
+
 
 
 

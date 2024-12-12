@@ -31,8 +31,8 @@ function Home() {
     profilePicture: 'https://example.com/profile2.jpg',
     username: 'Jane Smith',
     handle: 'janesmith',
-})
-let userDetails = getUserDetails("userDetails");
+  })
+  let userDetails = getUserDetails("userDetails");
 
 
   const socketUrl = "https://twitter-team-turning-testers-19648cf420b7.herokuapp.com/ws";
@@ -157,12 +157,12 @@ let userDetails = getUserDetails("userDetails");
   useEffect(() => {
     if (userDetails) {
       setUser({
-          profilePicture: 'https://example.com/profile2.jpg',
-          username: userDetails.name,
-          handle: userDetails.email.split("@gmail.com")[0],
-          text: "Learning React and Material UI is fun! 😄 #learning #react"
+        profilePicture: 'https://example.com/profile2.jpg',
+        username: userDetails.name,
+        handle: userDetails.email?.split("@gmail.com")[0],
+        text: "Learning React and Material UI is fun! 😄 #learning #react"
       })
-  }
+    }
     getAllPosts(); // Fetch posts when component mounts
   }, []);
 
@@ -203,22 +203,22 @@ let userDetails = getUserDetails("userDetails");
   const setDataForPosts = (result) => {
     const updatedData = result.map(entry => {
       const { name, email } = entry.user; // Extract user's name and email
-    
+
       // Attach name and email to each post
       const updatedPosts = entry.posts.map(post => ({
         ...post,
         username: name,
         email,
-        handle: email.split("@gmail.com")[0],
+        handle: email?.split("@gmail.com")[0],
         profilePicture: 'https://example.com/profile2.jpg',
 
       }));
-    
+
       return {
         ...entry,
         posts: enhancePosts(updatedPosts),
       };
-  
+
     });
     setPostData(updatedData.map(j => j.posts).flat()); // Store the fetched posts in state
   }
