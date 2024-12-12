@@ -5,10 +5,13 @@ import { Alert, Button, Drawer, List, ListItem, ListItemIcon, ListItemText } fro
 import HomeIcon from '@mui/icons-material/Home';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import PeopleIcon from '@mui/icons-material/People';
+
 import PostModal from '../PostModal/PostModal';
 import CreatePost from '../CreatePost/CreatePost';
 import Post from '../Post/Post'
 import Profile from '../Profile/Profile';
+import UsersModal from '../UsersModal/UsersModal'
 import { usePostContext } from '../PostContext';
 import { Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
@@ -280,6 +283,7 @@ let userDetails = getUserDetails("userDetails");
               { text: 'Home', icon: <HomeIcon /> },
               { text: 'Notifications', icon: <NotificationsIcon /> },
               { text: 'Profile', icon: <AccountCircleIcon />, component: <Profile /> },
+              { text: 'Users', icon: <PeopleIcon />, component: <UsersModal /> },
             ].map((item, index) => (
               <ListItem button key={index} onClick={() => handleClick(item.component)}>
                 <ListItemIcon>{item.icon}</ListItemIcon>

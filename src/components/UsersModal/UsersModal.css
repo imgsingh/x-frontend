@@ -1,0 +1,17 @@
+
+
+  /* Optional: Make the modal responsive */
+  @media (max-width: 768px) {
+    .modal-paper {
+      width: 90vw;
+      max-width: 90vw;
+    }
+  }
+
+  .MuiPaper-root{
+    width: 600px!important; 
+    max-width: 600px;
+  }
+  
+
+  
