@@ -1,21 +1,31 @@
 
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
-import CreatePost from '../CreatePost/CreatePost';
+import { Button } from '@mui/material';
+import { Avatar } from '@mui/material';
+import "../UsersModal/UsersModal.css"
 
 
-const PostModal = ({ open, handleClose, handlePost, content }) => {
+const UsersModal = ({ userData = [],  open, handleClose}) => { 
 
-    const onPostClick = (content) => {
-        // Handle post submission logic here (e.g., send content to API)
-        handlePost();
-        handleClose(); // Close the modal after posting
-      };
+
+
+    // const onPostClick = (content) => {
+    //     // Handle post submission logic here (e.g., send content to API)
+    //     handlePost();
+    //     handleClose(); // Close the modal after posting
+    //   };
+
+
+      const onClickFollow = () => {
+        handleClose()
+       }
+
 
   return (
     <div>
 
-      <Dialog open={true} onClose={handleClose} className="modal-paper"
+      <Dialog open={open} onClose={handleClose} className="modal-paper"
       sx={{
         "& .MuiDialog-container": {
           "& .MuiPaper-root": {
@@ -27,13 +37,29 @@ const PostModal = ({ open, handleClose, handlePost, content }) => {
           },
         },
       }}>
-        <DialogTitle>Users</DialogTitle>
+        <DialogTitle>Users                      
+          <Avatar className="profile-picture" />
+        </DialogTitle>
         <DialogContent>
-            Users content
+            <div className='user-list-wrapper'>
+            {userData.map((user) => (
+                <div className='user-item'>
+                     <Avatar src={user?.profilePicture} className="profile-picture" />
+                    <div className='name-handle'>
+                        <div>Name</div>
+                        <div>Handle</div>
+                    </div>
+                    <Button className="post-button" variant="contained" color="primary" onClick={onClickFollow}>
+                        Follow
+                    </Button>
+                </div>
+              ))}
+
+            </div>
         </DialogContent>
       </Dialog>
     </div>
   );
 };
 
-export default PostModal;
+export default UsersModal;

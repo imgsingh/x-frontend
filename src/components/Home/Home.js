@@ -23,6 +23,8 @@ import { getCookie, getUserDetails, enhancePosts } from '../Utils';
 
 function Home() {
   const [openModal, setOpenModal] = useState(false);
+  const [userOpenModal, setUserOpenModal] = useState(true);
+
   const { postContent } = usePostContext(); // Access shared state from context
   const [postData, setPostData] = useState([]);
   const [selectedComponent, setSelectedComponent] = useState(null);
@@ -76,6 +78,7 @@ function Home() {
       })
     }
     getAllPosts(); // Fetch posts when component mounts
+    getAllUsers();
   }, []);
 
   // Function to fetch all posts
@@ -112,6 +115,15 @@ function Home() {
     setOpenModal(false);
   };
 
+   // Close the usermodal
+   const handleCloseUserModal = () => {
+    setUserOpenModal(false);
+  };
+
+  const handleOpenUserModal = () => {
+    setUserOpenModal(true);
+  };
+  
   const setDataForPosts = (result) => {
     const updatedData = result.map(entry => {
       const { name, email } = entry.user; // Extract user's name and email
@@ -166,7 +178,32 @@ function Home() {
     }
   };
 
+   // Function to fetch all posts
+   const getAllUsers = async () => {
+    const token = getCookie('token'); // Replace with your actual token
+
+
+    try {
+      const response = await fetch('http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/auth/getAllUsers', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      debugger
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    }
+  };
+
   return (
+    <>
     <div className='home-wrapper'>
       <ToastContainer />
       <div className='home-navigation'>
@@ -195,9 +232,16 @@ function Home() {
               { text: 'Home', icon: <HomeIcon /> },
               { text: 'Notifications', icon: <NotificationsIcon /> },
               { text: 'Profile', icon: <AccountCircleIcon />, component: <Profile /> },
-              { text: 'Users', icon: <PeopleIcon />, component: <UsersModal /> },
+              { text: 'Users', icon: <PeopleIcon /> },
             ].map((item, index) => (
-              <ListItem button key={index} onClick={() => handleClick(item.component)}>
+              <ListItem button key={index} 
+                      onClick={() => {
+                        if (item.text === 'Users') {
+                          handleOpenUserModal(); // Open the modal when 'Users' is clicked
+                        } else {
+                          handleClick(item.component);
+                        }
+                      }}>
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
               </ListItem>
@@ -243,7 +287,9 @@ function Home() {
         {selectedComponent}
       </div>
     </div>
+    <UsersModal open={userOpenModal} handleClose={handleCloseUserModal} userData={[{name: 'June', email: 'adam@ll'}, {name: 'June',email: 'june@ll'}]}/>
+    </>
   )
-
 }
+
 export default Home

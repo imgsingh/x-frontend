@@ -89,7 +89,7 @@ function Login() {
           <img src={logo} alt="Logo" style={{ width: '50px', height: 'auto' }} />
         </Box>
         <Box component="form" noValidate autoComplete="off">
-          <TextField fullWidth label="Username" value={username} onChange={(e) => setUsername(e.target.value)} sx={{ marginBottom: 3 }} />
+          <TextField fullWidth label="Email" value={username} onChange={(e) => setUsername(e.target.value)} sx={{ marginBottom: 3 }} />
           <TextField fullWidth label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} sx={{ marginBottom: 3 }} />
           <Button fullWidth variant="contained" sx={{ marginTop: 2 }} onClick={handleLogin}>Login</Button>
         </Box>

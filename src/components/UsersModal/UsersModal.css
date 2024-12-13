@@ -1,17 +1,20 @@
 
 
-  /* Optional: Make the modal responsive */
-  @media (max-width: 768px) {
-    .modal-paper {
-      width: 90vw;
-      max-width: 90vw;
-    }
+  .user-list-wrapper{
+    display: flex;
+    flex-direction: column;
+  }
+  .user-item{
+    display: flex;
   }
 
-  .MuiPaper-root{
-    width: 600px!important; 
-    max-width: 600px;
+  .user-list-item{
+      display: flex;
   }
-  
+
+  .name-handle{
+      display: flex;
+      flex-direction: column;
+  }
 
   
