@@ -56,10 +56,12 @@ function Home() {
       const data = await response.json();
       if (data.length > 0) {
         for (const element of data) {
-          toast.info("NOTIFICATION: " + element?.message);
+          toast.info("NOTIFICATION: " + element?.text);
         }
       }
       setNotificationsCount(prevCount => prevCount + data.length);
+      //auto refresh posts
+      getAllPosts();
     } catch (err) {
       console.log("Error in notifications API: " + err.message);
     }
@@ -118,15 +120,15 @@ function Home() {
     setOpenModal(false);
   };
 
-   // Close the usermodal
-   const handleCloseUserModal = () => {
+  // Close the usermodal
+  const handleCloseUserModal = () => {
     setUserOpenModal(false);
   };
 
   const handleOpenUserModal = () => {
     setUserOpenModal(true);
   };
-  
+
   const setDataForPosts = (result) => {
     const updatedData = result.map(entry => {
       const { name, email } = entry.user; // Extract user's name and email
@@ -181,8 +183,8 @@ function Home() {
     }
   };
 
-   // Function to fetch all posts
-   const getAllUsers = async () => {
+  // Function to fetch all posts
+  const getAllUsers = async () => {
     const token = getCookie('token'); // Replace with your actual token
 
 
@@ -207,90 +209,90 @@ function Home() {
 
   return (
     <>
-    <div className='home-wrapper'>
-      <ToastContainer />
-      <div className='home-navigation'>
-        <Drawer
-          className='drawer'
-          variant="permanent"
-          anchor="left"
-          sx={{
-            width: 240,
-            fontSize: 25,
-            flexShrink: 0,
-            '& .MuiDrawer-paper': {
-              width: 350,
-              boxSizing: 'border-box',
-              backgroundColor: '#ffffff',
-              border: 'none',
-              boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
-            },
-          }}>
-          <div className='home-header'>
-            <span className='logo-text'>Turing</span>
-            <div className="header__logo"></div>
-          </div>
-          <List className='navigation-list'>
-            {[
-              { text: 'Home', icon: <HomeIcon /> },
-              { text: 'Notifications', icon: <NotificationsIcon /> },
-              { text: 'Profile', icon: <AccountCircleIcon />, component: <Profile /> },
-              { text: 'Users', icon: <PeopleIcon /> },
-            ].map((item, index) => (
-              <ListItem button key={index} 
-                      onClick={() => {
-                        if (item.text === 'Users') {
-                          handleOpenUserModal(); // Open the modal when 'Users' is clicked
-                        } else {
-                          handleClick(item.component);
-                        }
-                      }}>
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} />
-              </ListItem>
-            ))}
-            <div className='notification-number'><span>{notificationsCount}</span></div>
-
-          </List>
-          <Button
-            className="post-button"
-            variant="contained"
-            color="primary"
-            onClick={handleOpenModal}
-          >Post
-          </Button>
-
-        </Drawer>
-      </div>
-      {selectedComponent == null
-        && <>
-          <div className='home-content'>
-            <div className='create-post-wrapper'>
-              <CreatePost onPost={submitPostContent} />
+      <div className='home-wrapper'>
+        <ToastContainer />
+        <div className='home-navigation'>
+          <Drawer
+            className='drawer'
+            variant="permanent"
+            anchor="left"
+            sx={{
+              width: 240,
+              fontSize: 25,
+              flexShrink: 0,
+              '& .MuiDrawer-paper': {
+                width: 350,
+                boxSizing: 'border-box',
+                backgroundColor: '#ffffff',
+                border: 'none',
+                boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+              },
+            }}>
+            <div className='home-header'>
+              <span className='logo-text'>Turing</span>
+              <div className="header__logo"></div>
             </div>
-            <div className='post-list-wrapper'>
-              {postData.map((post) => (
-                <Post
-                  key={post.id}
-                  user={post}
-                  content={post.content}
-                  likes={post.likes}
-                  retweets={post.retweets}
-                  replies={post.replies}
-                  time={post.createdAt}
-                  bio={post.bio}
-                />
+            <List className='navigation-list'>
+              {[
+                { text: 'Home', icon: <HomeIcon /> },
+                { text: 'Notifications', icon: <NotificationsIcon /> },
+                { text: 'Profile', icon: <AccountCircleIcon />, component: <Profile /> },
+                { text: 'Users', icon: <PeopleIcon /> },
+              ].map((item, index) => (
+                <ListItem button key={index}
+                  onClick={() => {
+                    if (item.text === 'Users') {
+                      handleOpenUserModal(); // Open the modal when 'Users' is clicked
+                    } else {
+                      handleClick(item.component);
+                    }
+                  }}>
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.text} />
+                </ListItem>
               ))}
+              <div className='notification-number'><span>{notificationsCount}</span></div>
+
+            </List>
+            <Button
+              className="post-button"
+              variant="contained"
+              color="primary"
+              onClick={handleOpenModal}
+            >Post
+            </Button>
+
+          </Drawer>
+        </div>
+        {selectedComponent == null
+          && <>
+            <div className='home-content'>
+              <div className='create-post-wrapper'>
+                <CreatePost onPost={submitPostContent} />
+              </div>
+              <div className='post-list-wrapper'>
+                {postData.map((post) => (
+                  <Post
+                    key={post.id}
+                    user={post}
+                    content={post.content}
+                    likes={post.likes}
+                    retweets={post.retweets}
+                    replies={post.replies}
+                    time={post.createdAt}
+                    bio={post.bio}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-          <PostModal open={openModal} handleClose={handleCloseModal}
-            handlePost={submitPostContent} />
-        </>}
-      <div style={{ paddingLeft: '200px' }}>
-        {selectedComponent}
+            <PostModal open={openModal} handleClose={handleCloseModal}
+              handlePost={submitPostContent} />
+          </>}
+        <div style={{ paddingLeft: '200px' }}>
+          {selectedComponent}
+        </div>
       </div>
-    </div>
-    <UsersModal open={userOpenModal} handleClose={handleCloseUserModal} userData={userData}/>
+      <UsersModal open={userOpenModal} handleClose={handleCloseUserModal} userData={userData} />
     </>
   )
 }
