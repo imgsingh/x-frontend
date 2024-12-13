@@ -11,6 +11,10 @@ const Profile = () => {
     const [name, setName] = useState("John Doe");
     const [email, setEmail] = useState("test@gmail.com");
     const [bio, setBio] = useState("Bio");
+    const [followCount, setFollowCount] = useState({
+        followCount: 0,
+        unFollowCount: 0
+    });
     const [user, setUser] = useState({
         profilePicture: 'https://example.com/profile2.jpg',
         username: 'Jane Smith',
@@ -24,7 +28,10 @@ const Profile = () => {
             setName(userDetails.name);
             setEmail(userDetails.email);
             setBio(userDetails.profileBio);
-
+            setFollowCount({
+                followCount: userDetails.followersCount,
+                unFollowCount: userDetails.followingCount
+            })
             setUser({
                 profilePicture: 'https://example.com/profile2.jpg',
                 username: userDetails.name,
@@ -68,11 +75,11 @@ const Profile = () => {
             </div>
             <div className="stats">
                 <div className="stat">
-                    <span className="count">150</span>
+                    <span className="count">{followCount.unFollowCount}</span>
                     <span className="label">Following</span>
                 </div>
                 <div className="stat">
-                    <span className="count">500</span>
+                    <span className="count">{followCount.followCount}</span>
                     <span className="label">Followers</span>
                 </div>
             </div>
@@ -81,12 +88,12 @@ const Profile = () => {
             <div className="tweets">
                 <h2>Recent Tweets</h2>
                 {userPosts.map((post) => (
-                    <Post key={post.id} user={user} bio={post.bio} 
-                          content={post.content} time={post.createdAt}
-                          likes={post.likes}
-                          retweets={post.retweets}
-                          replies={post.replies}
-                          />
+                    <Post key={post.id} user={user} bio={post.bio}
+                        content={post.content} time={post.createdAt}
+                        likes={post.likes}
+                        retweets={post.retweets}
+                        replies={post.replies}
+                    />
                 ))}
             </div>
         </div>

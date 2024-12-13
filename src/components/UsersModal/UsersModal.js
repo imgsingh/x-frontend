@@ -1,25 +1,68 @@
-import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogTitle } from '@mui/material';
-import { Button } from '@mui/material';
-import { Avatar } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Dialog, DialogContent, DialogTitle, Button, Avatar } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 import "../UsersModal/UsersModal.css";
+import { getUserDetails } from '../Utils';
 
 const UsersModal = ({ userData = [], open, handleClose }) => {
-  // State to track follow status for each user
-  const [followStatus, setFollowStatus] = useState(
-    userData.map(() => false) // Initialize with 'false' for all users
-  );
+  const [followStatus, setFollowStatus] = useState([]);
+  const currentUserDetails = getUserDetails("userDetails"); // Get current user details from local storage
 
-  const onClickFollow = (index) => {
-    // Toggle follow status for the clicked user
-    setFollowStatus((prevStatus) => {
-      const updatedStatus = [...prevStatus];
-      updatedStatus[index] = !updatedStatus[index];
-      return updatedStatus;
-    });
+  // Initialize follow status based on followerList (only when userData changes)
+  useEffect(() => {
+    if (userData.length > 0 && followStatus.length === 0) {
+      //get user follow list
+      let followlist = null;
+      for (const user of userData) {
+        if (user.id == currentUserDetails.userId) {
+          followlist = Array.isArray(user.followerList)
+            ? user.followerList.map((follower) => follower.id)
+            : null;
+        }
+      }
+      if (followlist != null) {
+        const initialFollowStatus = userData.map((user) => {
+          return {
+            ...user, // Spread operator to retain all user properties (id, name, email, profilePicture, etc.)
+            isFollowing: followlist.includes(user.id), // Check if user.id exists in followList
+          };
+        });
+
+        setFollowStatus(initialFollowStatus);
+      }
+    }
+  }, [userData]);
+
+  // Toggle follow/unfollow
+  const onClickFollow = (userId) => {
+    setFollowStatus((prevStatus) =>
+      prevStatus.map((status) =>
+        status.id === userId ? { ...status, isFollowing: !status.isFollowing } : status
+      )
+    );
+
+    callAPIToChangeFollow(userId);
   };
+
+  function callAPIToChangeFollow(userId) {
+    fetch("http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/connection/follow", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId1: currentUserDetails.userId.toString(),
+        userId2: userId.toString()
+      })
+    })
+      .then((data) => {
+        if (data.status == 201) {
+          console.log("FOLLOWED/UNFOLLOWED")
+        }
+      })
+      .catch((error) => console.error("Error calling API:", error));
+
+
+  }
 
   return (
     <div>
@@ -49,7 +92,7 @@ const UsersModal = ({ userData = [], open, handleClose }) => {
         <DialogContent>
           <div className="user-list-wrapper">
             {userData.map((user, index) => (
-              <div className="user-item" key={index}>
+              <div className="user-item" key={user.id}>
                 <Avatar src={user?.profilePicture} className="profile-picture" />
                 <div className="name-handle">
                   <div className="user-list-name">{user.name}</div>
@@ -57,14 +100,14 @@ const UsersModal = ({ userData = [], open, handleClose }) => {
                     @{user.email?.split("@gmail.com")[0]}
                   </div>
                 </div>
-                <Button
+                {user.id !== currentUserDetails.userId && <Button
                   className="follow-button"
                   variant="contained"
-                  color={followStatus[index] ? "secondary" : "primary"}
-                  onClick={() => onClickFollow(index)}
+                  color={followStatus[index]?.isFollowing ? "secondary" : "primary"}
+                  onClick={() => onClickFollow(user.id)}
                 >
-                  {followStatus[index] ? "Unfollow" : "Follow"}
-                </Button>
+                  {followStatus[index]?.isFollowing ? "Unfollow" : "Follow"}
+                </Button>}
               </div>
             ))}
           </div>

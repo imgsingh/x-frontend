@@ -58,10 +58,10 @@ function Home() {
         for (const element of data) {
           toast.info("NOTIFICATION: " + element?.text);
         }
+        //auto refresh posts
+        getAllPosts();
       }
       setNotificationsCount(prevCount => prevCount + data.length);
-      //auto refresh posts
-      getAllPosts();
     } catch (err) {
       console.log("Error in notifications API: " + err.message);
     }
