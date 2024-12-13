@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { TextField, Button } from '@mui/material';
-import './CreatePost.css'; 
+import './CreatePost.css';
 import { usePostContext } from '../PostContext';
 
 const CreatePost = ({ onPost, onCancel, content, onContentChange }) => {
@@ -21,7 +21,11 @@ const CreatePost = ({ onPost, onCancel, content, onContentChange }) => {
         rows={4}
         fullWidth
         value={postContent}
-        onChange={(e) => updateContent(e.target.value)}
+        onChange={(e) => {
+          if (e.target.value.length <= 250) {
+            updateContent(e.target.value);
+          }
+        }}
         placeholder="What's happening?"
         className="post-textfield"
       />
