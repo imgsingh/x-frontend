@@ -251,7 +251,7 @@ function Home() {
                   <ListItemText primary={item.text} />
                 </ListItem>
               ))}
-              <div className='notification-number'><span>{notificationsCount}</span></div>
+              {notificationsCount > 0 ? <div className='notification-number'><span>{notificationsCount}</span></div> : ''}
 
             </List>
             <Button
