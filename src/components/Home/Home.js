@@ -26,50 +26,13 @@ function Home() {
   const { postContent } = usePostContext(); // Access shared state from context
   const [postData, setPostData] = useState([]);
   const [selectedComponent, setSelectedComponent] = useState(null);
-  const [notifications, setNotifications] = useState([]);
+  const [notificationsCount, setNotificationsCount] = useState(0);
   const [user, setUser] = useState({
     profilePicture: 'https://example.com/profile2.jpg',
     username: 'Jane Smith',
     handle: 'janesmith',
   })
   let userDetails = getUserDetails("userDetails");
-
-
-  const socketUrl = "https://twitter-team-turning-testers-19648cf420b7.herokuapp.com/ws";
-
-  useEffect(() => {
-    // Create WebSocket connection
-    const socket = new SockJS(socketUrl);
-    const stompClient = Stomp.over(socket);
-
-    // Connect to WebSocket server
-    stompClient.connect({}, (frame) => {
-      console.log("Connected to WebSocket", frame);
-
-      // Subscribe to notifications queue
-      stompClient.subscribe("/user/queue/notifications", (message) => {
-        // Assuming message.body is a JSON string, parse it if necessary
-        const parsedMessage = JSON.parse(message.body);
-
-        // Display toast notification
-        toast.info(`New Notification: ${parsedMessage.content || "No content"}`, {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-
-        // Update notifications state
-        setNotifications((prev) => [...prev, parsedMessage]);
-      });
-    });
-
-    // Cleanup function to disconnect WebSocket when the component unmounts
-    return () => {
-      if (stompClient) {
-        stompClient.disconnect(() => {
-          console.log("Disconnected from WebSocket");
-        });
-      }
-    };
-  }, []);
 
   const handleClick = (component) => {
     if (component == null) {
@@ -79,80 +42,29 @@ function Home() {
     }
   };
 
+  const fetchNotifications = async () => {
+    try {
+      const response = await fetch(`http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/posts/users/${userDetails?.userId}/allNotifications`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch notifications');
+      }
+      const data = await response.json();
+      if (data.length > 0) {
+        for (const element of data) {
+          toast.info("NOTIFICATION: " + element?.message);
+        }
+      }
+      setNotificationsCount(prevCount => prevCount + data.length);
+    } catch (err) {
+      console.log("Error in notifications API: " + err.message);
+    }
+  };
 
-
-  // const postData = [
-  //     {
-  //       id: 1,
-  //       user: {
-  //         profilePicture: 'https://example.com/profile1.jpg',
-  //         username: 'John Doe',
-  //         handle: 'johndoe',
-  //       },
-  //       text: 'This is a sample tweet! #react #materialui',
-  //       content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',  
-  //       likes: 10,
-  //       retweets: 3,
-  //       replies: 10,
-  //       time: '2m ago',
-  //     },
-  //     {
-  //       id: 2,
-  //       user: {
-  //         profilePicture: 'https://example.com/profile2.jpg',
-  //         username: 'Jane Smith',
-  //         handle: 'janesmith',
-  //       },
-  //       text: 'Learning React and Material UI is fun! 😄 #learning #react',
-  //       content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',  
-  //       likes: 200,
-  //       retweets: 50,
-  //       replies: 20,
-  //       time: '15m ago',
-  //     },
-  //     {
-  //         id: 3,
-  //         user: {
-  //           profilePicture: 'https://example.com/profile2.jpg',
-  //           username: 'Jane Smith',
-  //           handle: 'janesmith',
-  //         },
-  //         text: 'Learning React and Material UI is fun! 😄 #learning #react',
-  //         content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',  
-  //         likes: 200,
-  //         retweets: 50,
-  //         replies: 20,
-  //         time: '15m ago',
-  //       },
-  //       {
-  //         id: 5,
-  //         user: {
-  //           profilePicture: 'https://example.com/profile2.jpg',
-  //           username: 'Jane Smith',
-  //           handle: 'janesmith',
-  //         },
-  //         text: 'Learning React and Material UI is fun! 😄 #learning #react',
-  //         content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',  
-  //         likes: 200,
-  //         retweets: 50,
-  //         replies: 20,
-  //         time: '15m ago',
-  //       },
-  //       {
-  //         id: 5,
-  //         user: {
-  //           profilePicture: 'https://example.com/profile2.jpg',
-  //           username: 'Jane Smith',
-  //           handle: 'janesmith',
-  //         },
-  //         text: 'Learning React and Material UI is fun! 😄 #learning #react',
-  //         content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum',  
-  //         likes: 200,
-  //         retweets: 50,
-  //         replies: 20,
-  //         time: '15m ago',
-  //       },
-  // ];
+  useEffect(() => {
+    fetchNotifications();
+    const intervalId = setInterval(fetchNotifications, 20000);
+    return () => clearInterval(intervalId);
+  }, [userDetails?.userId]);
 
   useEffect(() => {
     if (userDetails) {
@@ -290,7 +202,7 @@ function Home() {
                 <ListItemText primary={item.text} />
               </ListItem>
             ))}
-            <div className='notification-number'><span>{notifications.length}</span></div>
+            <div className='notification-number'><span>{notificationsCount}</span></div>
 
           </List>
           <Button

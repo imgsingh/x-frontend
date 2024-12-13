@@ -3,6 +3,7 @@ import { TextField, Button, Box, Container, Paper, Typography } from '@mui/mater
 import { useNavigate } from 'react-router-dom';
 import logo from '../../components/Login/logo.png'; // Adjust path
 import { getCookie } from '../Utils';
+import { toast, ToastContainer } from 'react-toastify';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -38,24 +39,28 @@ function Login() {
 
         const data = await response.json();
 
-        const expirationDate = new Date();
-        expirationDate.setFullYear(expirationDate.getFullYear() + 20);
+        if (!response.ok || typeof data.token !== "undefined") {
+          const expirationDate = new Date();
+          expirationDate.setFullYear(expirationDate.getFullYear() + 20);
 
-        // Set token in cookies
-        document.cookie = `token=${data.token}; expires=${expirationDate.toUTCString()}; path=/`;
+          // Set token in cookies
+          document.cookie = `token=${data.token}; expires=${expirationDate.toUTCString()}; path=/`;
 
-        // Optionally save user details in localStorage
-        localStorage.setItem("userDetails", JSON.stringify({
-          userId: data.userId,
-          name: data.name,
-          email: data.email,
-          profileBio: data.profileBio,
-          followersCount: data.followersCount,
-          followingCount: data.followingCount
-        }));
+          // Optionally save user details in localStorage
+          localStorage.setItem("userDetails", JSON.stringify({
+            userId: data.userId,
+            name: data.name,
+            email: data.email,
+            profileBio: data.profileBio,
+            followersCount: data.followersCount,
+            followingCount: data.followingCount
+          }));
 
-        // Reload the page to ensure the cookie is available for useEffect to check
-        window.location.reload();  // This forces a reload so the useEffect hook can detect the token
+          // Reload the page to ensure the cookie is available for useEffect to check
+          window.location.reload();  // This forces a reload so the useEffect hook can detect the token
+        } else {
+          toast.error("Invalid Credentials")
+        }
 
       } catch (error) {
         console.error("Error calling API:", error);
@@ -77,6 +82,7 @@ function Login() {
 
   return (
     <Container maxWidth="sm" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+      <ToastContainer />
       <Paper sx={{ padding: 4, borderRadius: '20px', width: '100%', maxWidth: 400 }}>
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: 3 }}>
           <Typography variant="h4" sx={{ fontWeight: 'bold', marginRight: 2 }}>Turing</Typography>
