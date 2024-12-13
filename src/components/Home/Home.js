@@ -23,12 +23,15 @@ import { getCookie, getUserDetails, enhancePosts } from '../Utils';
 
 function Home() {
   const [openModal, setOpenModal] = useState(false);
-  const [userOpenModal, setUserOpenModal] = useState(true);
+  const [userOpenModal, setUserOpenModal] = useState(false);
 
   const { postContent } = usePostContext(); // Access shared state from context
   const [postData, setPostData] = useState([]);
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [notificationsCount, setNotificationsCount] = useState(0);
+  const [userData, setUserData] = useState([]);
+
+
   const [user, setUser] = useState({
     profilePicture: 'https://example.com/profile2.jpg',
     username: 'Jane Smith',
@@ -196,7 +199,7 @@ function Home() {
       }
 
       const result = await response.json();
-      debugger
+      setUserData(result)
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
@@ -287,7 +290,7 @@ function Home() {
         {selectedComponent}
       </div>
     </div>
-    <UsersModal open={userOpenModal} handleClose={handleCloseUserModal} userData={[{name: 'June', email: 'adam@ll'}, {name: 'June',email: 'june@ll'}]}/>
+    <UsersModal open={userOpenModal} handleClose={handleCloseUserModal} userData={userData}/>
     </>
   )
 }

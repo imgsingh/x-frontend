@@ -3,19 +3,12 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { Button } from '@mui/material';
 import { Avatar } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+
 import "../UsersModal/UsersModal.css"
 
 
 const UsersModal = ({ userData = [],  open, handleClose}) => { 
-
-
-
-    // const onPostClick = (content) => {
-    //     // Handle post submission logic here (e.g., send content to API)
-    //     handlePost();
-    //     handleClose(); // Close the modal after posting
-    //   };
-
 
       const onClickFollow = () => {
         handleClose()
@@ -37,21 +30,23 @@ const UsersModal = ({ userData = [],  open, handleClose}) => {
           },
         },
       }}>
-        <DialogTitle>Users                      
-          <Avatar className="profile-picture" />
-        </DialogTitle>
+        <DialogTitle>
+          <div className='user-dialog-title'>
+            <div>Users</div>
+            <div onClick={handleClose} className='user-dialog-close-button'><CloseIcon/></div>
+          </div></DialogTitle>
         <DialogContent>
             <div className='user-list-wrapper'>
             {userData.map((user) => (
                 <div className='user-item'>
                      <Avatar src={user?.profilePicture} className="profile-picture" />
-                    <div className='name-handle'>
-                        <div>Name</div>
-                        <div>Handle</div>
-                    </div>
-                    <Button className="post-button" variant="contained" color="primary" onClick={onClickFollow}>
-                        Follow
-                    </Button>
+                      <div className='name-handle'>
+                        <div className='user-list-name'>{user.name}</div>
+                        <div  className='user-list-handle'>@{user.email?.split("@gmail.com")[0]}</div>
+                      </div>
+                      <Button className="follow-button" variant="contained" color="primary" onClick={onClickFollow}>
+                          Follow
+                      </Button>
                 </div>
               ))}
 
