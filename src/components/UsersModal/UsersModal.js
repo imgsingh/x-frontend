@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogTitle, Button, Avatar } from '@mui/materia
 import CloseIcon from '@mui/icons-material/Close';
 
 import "../UsersModal/UsersModal.css";
-import { getUserDetails } from '../Utils';
+import { getCookie, getUserDetails, setUserDetails } from '../Utils';
 
 const UsersModal = ({ userData = [], open, handleClose }) => {
   const [followStatus, setFollowStatus] = useState([]);
@@ -57,12 +57,38 @@ const UsersModal = ({ userData = [], open, handleClose }) => {
       .then((data) => {
         if (data.status == 201) {
           console.log("FOLLOWED/UNFOLLOWED")
+          getAllUsers();
         }
       })
       .catch((error) => console.error("Error calling API:", error));
-
-
   }
+
+  const getAllUsers = async () => {
+    const token = getCookie('token');
+    try {
+      const response = await fetch('http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/auth/getAllUsers', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      //get user details
+      const userDetials = getUserDetails("userDetails");
+      if (userDetials.userId) {
+        const filteredUser = result.find((item) => item.id == userDetials.userId);
+        userDetials.followersCount = filteredUser.followerList.length;
+        setUserDetails(userDetials);
+      }
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    }
+  };
 
   return (
     <div>
