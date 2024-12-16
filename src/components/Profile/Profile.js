@@ -46,9 +46,9 @@ const Profile = () => {
         })
             .then((response) => response.json())
             .then((data) => {
-                const sortedPosts = [...data].sort((a, b) => 
+                const sortedPosts = [...data].sort((a, b) =>
                     new Date(b.createdAt) - new Date(a.createdAt)
-                  );
+                );
                 setUserPosts(enhancePosts(sortedPosts));
             })
             .catch((error) => console.error("Error calling API:", error));
@@ -77,11 +77,11 @@ const Profile = () => {
             </div>
             <div className="stats">
                 <div className="stat">
-                    <span className="count">{followCount.unFollowCount}</span>
+                    <span className="count">{followCount.followCount}</span>
                     <span className="label">Following</span>
                 </div>
                 <div className="stat">
-                    <span className="count">{followCount.followCount}</span>
+                    <span className="count">{followCount.unFollowCount}</span>
                     <span className="label">Followers</span>
                 </div>
             </div>

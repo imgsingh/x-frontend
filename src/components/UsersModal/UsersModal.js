@@ -83,6 +83,7 @@ const UsersModal = ({ userData = [], open, handleClose }) => {
       if (userDetials.userId) {
         const filteredUser = result.find((item) => item.id == userDetials.userId);
         userDetials.followersCount = filteredUser.followerList.length;
+        //userDetials.followingCount = filteredUser.followingList.length;
         setUserDetails(userDetials);
       }
     } catch (error) {

@@ -6,6 +6,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PeopleIcon from '@mui/icons-material/People';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 import PostModal from '../PostModal/PostModal';
 import CreatePost from '../CreatePost/CreatePost';
@@ -18,6 +19,8 @@ import SockJS from "sockjs-client";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getCookie, getUserDetails, enhancePosts } from '../Utils';
+import Cookies from 'js-cookie';
+import { Navigate } from 'react-router-dom';
 
 
 
@@ -104,9 +107,9 @@ function Home() {
       }
 
       const result = await response.json();
-      const sortedPosts = [...result].sort((a, b) => 
-        new Date(b.createdAt) - new Date(a.createdAt)     
-     );
+      const sortedPosts = [...result].sort((a, b) =>
+        new Date(b.createdAt) - new Date(a.createdAt)
+      );
       setDataForPosts(sortedPosts)
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -155,10 +158,10 @@ function Home() {
 
     let flatArray = updatedData.map(j => j.posts).flat()
 
-    const sortedPosts = [...flatArray].sort((a, b) => 
+    const sortedPosts = [...flatArray].sort((a, b) =>
       new Date(b.createdAt) - new Date(a.createdAt)
     );
-  
+
     setPostData(sortedPosts); // Store the fetched posts in state
   }
 
@@ -217,6 +220,13 @@ function Home() {
     }
   };
 
+  const handleLogout = () => {
+    Cookies.remove('token', { path: '/' });
+    localStorage.removeItem('userDetails');
+    //Navigate('/login');
+    window.location.reload();
+  };
+
   return (
     <>
       <div className='home-wrapper'>
@@ -248,11 +258,14 @@ function Home() {
                 { text: 'Notifications', icon: <NotificationsIcon /> },
                 { text: 'Profile', icon: <AccountCircleIcon />, component: <Profile /> },
                 { text: 'Users', icon: <PeopleIcon /> },
+                { text: 'Logout', icon: <LogoutIcon />, },
               ].map((item, index) => (
                 <ListItem button key={index}
                   onClick={() => {
                     if (item.text === 'Users') {
                       handleOpenUserModal(); // Open the modal when 'Users' is clicked
+                    } else if (item.text === 'Logout') {
+                      handleLogout()
                     } else {
                       handleClick(item.component);
                     }
