@@ -7,13 +7,12 @@ import { useNavigate } from 'react-router-dom';
 function SignUp() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
 
   const handleSignUp = () => {
-    if (name && email && username && password) {
+    if (name && email && password) {
       handleSignUpCall()
     } else {
       alert('Please fill out all fields!');
@@ -29,7 +28,7 @@ function SignUp() {
   const handleSignUpCall = async () => {
     if (validateEmail(email) && password !== '') {
       try {
-        const response = await fetch("http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/auth/login", {
+        const response = await fetch("http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/auth/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -42,7 +41,7 @@ function SignUp() {
 
         const data = await response.json();
 
-        if (!response.ok || typeof data.token !== "undefined") {
+        if (response.status == 201) {
           toast.success("Success: " + "You registration is successful");
           navigate('/login');
 
@@ -111,14 +110,7 @@ function SignUp() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <TextField
-            fullWidth
-            label="Username"
-            variant="outlined"
-            sx={{ marginBottom: 3, borderRadius: '10px' }}
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+        
           <TextField
             fullWidth
             label="Password"
