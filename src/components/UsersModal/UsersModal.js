@@ -50,8 +50,8 @@ const UsersModal = ({ userData = [], open, handleClose }) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        userId1: currentUserDetails.userId.toString(),
-        userId2: userId.toString()
+        userId1: userId.toString(),
+        userId2: currentUserDetails.userId.toString()
       })
     })
       .then((data) => {
