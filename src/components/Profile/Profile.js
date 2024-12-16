@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import './Profile.css';
 import Post from '../Post/Post';
 import CoverImage from '../../assets/images/cover-image.jpg';
-import { getUserDetails, enhancePosts } from '../Utils';
+import { getUserDetails, enhancePosts, getCookie } from '../Utils';
 
 const Profile = () => {
     const [userPosts, setUserPosts] = useState([]);
@@ -53,7 +53,6 @@ const Profile = () => {
             })
             .catch((error) => console.error("Error calling API:", error));
     }, []);
-
 
     return (
         <div className="profile-container">
