@@ -104,7 +104,10 @@ function Home() {
       }
 
       const result = await response.json();
-      setDataForPosts(result)
+      const sortedPosts = [...result].sort((a, b) => 
+        new Date(b.createdAt) - new Date(a.createdAt)     
+     );
+      setDataForPosts(sortedPosts)
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
@@ -149,7 +152,14 @@ function Home() {
       };
 
     });
-    setPostData(updatedData.map(j => j.posts).flat()); // Store the fetched posts in state
+
+    let flatArray = updatedData.map(j => j.posts).flat()
+
+    const sortedPosts = [...flatArray].sort((a, b) => 
+      new Date(b.createdAt) - new Date(a.createdAt)
+    );
+  
+    setPostData(sortedPosts); // Store the fetched posts in state
   }
 
 

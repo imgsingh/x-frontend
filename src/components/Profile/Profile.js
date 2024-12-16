@@ -35,7 +35,7 @@ const Profile = () => {
             setUser({
                 profilePicture: 'https://example.com/profile2.jpg',
                 username: userDetails.name,
-                handle: userDetails.email.split("@gmail.com")[0],
+                handle: userDetails.email?.split("@gmail.com")[0],
             })
         }
 
@@ -46,7 +46,10 @@ const Profile = () => {
         })
             .then((response) => response.json())
             .then((data) => {
-                setUserPosts(enhancePosts(data));
+                const sortedPosts = [...data].sort((a, b) => 
+                    new Date(b.createdAt) - new Date(a.createdAt)
+                  );
+                setUserPosts(enhancePosts(sortedPosts));
             })
             .catch((error) => console.error("Error calling API:", error));
     }, []);
