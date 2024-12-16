@@ -26,6 +26,7 @@ function Login() {
 
   const handleLogin = async (event) => {
     event.preventDefault();
+ 
     if (validateEmail(username) && password !== '') {
       try {
         const response = await fetch("http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/auth/login", {

@@ -1,21 +1,67 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box, Container, Paper, Typography } from '@mui/material';
+import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+
 
 function SignUp() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
 
   const handleSignUp = () => {
     if (name && email && username && password) {
-      alert(`Sign Up Successful!\n\nName: ${name}\nEmail: ${email}\nUsername: ${username}`);
+      handleSignUpCall()
     } else {
       alert('Please fill out all fields!');
     }
   };
 
+  function validateEmail(email) {
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return emailPattern.test(email);
+  }
+
+
+  const handleSignUpCall = async () => {
+    if (validateEmail(email) && password !== '') {
+      try {
+        const response = await fetch("http://twitter-team-turning-testers-19648cf420b7.herokuapp.com/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            "email": email,
+            "password": password,
+            "name": name,
+            "roles":["ADMIN","USER"]
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || typeof data.token !== "undefined") {
+          toast.success("Success: " + "You registration is successful");
+          navigate('/login');
+
+        } else {
+          toast.error("Invalid Credentials")
+        }
+
+      } catch (error) {
+        console.error("Error calling API:", error);
+      }
+    } else {
+      alert("Invalid Credentials");
+    }
+  };
+
+
   return (
+    <>
+    <ToastContainer />
     <Container
       maxWidth="sm"
       sx={{
@@ -102,6 +148,7 @@ function SignUp() {
         </Box>
       </Paper>
     </Container>
+    </>
   );
 }
 
